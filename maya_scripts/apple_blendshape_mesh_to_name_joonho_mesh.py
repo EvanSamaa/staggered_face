@@ -10,9 +10,9 @@ mesh_to_name = {
 "Mesh5": "mouthSmileLeft",
 "Mesh6": "mouthStretchLeft",
 "Mesh7": "mouthSmileRight",
-"Mesh8": "mouthStretchRight",
+"Mesh8": "mouthShrugUpper",
 "Mesh9": "mouthShrugLower",
-"Mesh10": "mouthSmileRight",
+"Mesh10": "mouthRollUpper",
 "Mesh11": "mouthRollLower",
 "Mesh12": "mouthRight",
 "Mesh13": "mouthPucker",
@@ -38,8 +38,8 @@ mesh_to_name = {
 "Mesh33": "eyeLookUpRight",
 "Mesh34": "eyeLookUpLeft",
 "Mesh35": "eyeLookOutRight",
-"Mesh36": "mouthRollLower",
-"Mesh37": "eyeLookOutLeft",
+"Mesh36": "eyeLookOutLeft",
+"Mesh37": "eyeLookInRight",
 "Mesh38": "eyeLookInLeft",
 "Mesh39": "eyeLookDownRight",
 "Mesh40": "eyeLookDownLeft", 
@@ -59,7 +59,7 @@ new_mesh_to_name = {}
 for key in mesh_to_name:
     new_mesh_to_name[key] = mesh_to_name[key].lower()
     new_name_to_mesh[mesh_to_name[key].lower()] = key
-with open('C:/Users/evan1/Documents/staggered_face/models/joonho_mesh_number_to_AU_name.json', 'w') as fp:
+with open('C:/Users/evansamaa/Desktop/staggered_face/models/joonho_mesh_number_to_AU_name.json', 'w') as fp:
     json.dump(new_mesh_to_name, fp)
-with open('C:/Users/evan1/Documents/staggered_face/models/joonho_AU_name_to_mesh_number.json', 'w') as fp:
+with open('C:/Users/evansamaa/Desktop/staggered_face/models/joonho_AU_name_to_mesh_number.json', 'w') as fp:
     json.dump(new_name_to_mesh, fp)
