@@ -44,33 +44,57 @@ def graph_simplification_original(x: np.array, t: np.array, k=-1):
     E2 = np.zeros((x.shape[0], x.shape[0]))
     E2_path = {}
     for i in range(0, x.shape[0]):
-        for j in range(i+2, x.shape[0]):
+        for j in range(i+1, x.shape[0]):
             max_val, max_index = max_chord_distance_simplified(t_x, i, j)
             E2[i, j] = max_val
+            try:
+                E2_path[i][j] = []
+            except:
+                E2_path[i] = {j:[]}
     Ek = [E2]
     Ek_path = [E2_path]
-    if k > 0:
-        # iterate k - 2 times since 2 point paths between any pairs of points is trivial
+    if k > 2:
+        # iterate k - 2 times sinces 2 point paths between any pairs of points is trivial
         for i in range(2, k):
+            print(Ek_path[-1])
             # iterate through all posible points between the second point and second last to see which
             # one to pause at
             Ei = np.zeros((1, x.shape[0]))
+            Ei_path = {}
             # placing m at the first spot is equivalent to a two point curve
             Ei[0] = E2[0, E2.shape[0]-1]
             # placing m at the last spot is equivalent to just the previous error
-            Ei[-1] = Ek[-1][0, -1]
-            min_error = np.inf
-            for m in range(1, x.shape[0] - 1):
-                # one part of the error is the i point path from start to m
-                Ei_k_point_path = Ek[-1][0, m]
-                # the second part is from M to end
-                Ei_E2 = E2[m, -1]
-                # max is used to aggregate the two
-                Ei_aggregated = max(Ei_k_point_path. Ei_E2)
-                Ei[m] = Ei_aggregated
-
-
-
+            # Ei[-1] = Ek[-1][0, -1]
+            for n in range(i - 1, x.shape[0]):
+                if n == 1:
+                    Ei[0, n] = Ek[-1][0, 1]
+                    Ei_path[0] = {n: []}
+                else:
+                    min_error = np.inf
+                    min_m = -1
+                    for m in range(1, n):
+                        # one part of the error is the i point path from start to m
+                        Ei_k_point_path = Ek[-1][0, m]
+                        # the second part is from M to end
+                        Ei_E2 = E2[m, n]
+                        # max is used to aggregate the two
+                        Ei_aggregated = max(Ei_k_point_path, Ei_E2)
+                        if Ei_aggregated <= min_error:
+                            min_error = Ei_aggregated
+                            min_m = m
+                    Ei[0, n] = min_error
+                    if not min_m in Ek_path[-1][0][n]:
+                        path_so_far = Ek_path[-1][0][n] + [min_m]
+                    else:
+                        path_so_far = Ek_path[-1][0][n]
+                    try:
+                        Ei_path[0][n] = path_so_far
+                    except:
+                        Ei_path[0] = {n: path_so_far}
+            Ek.append(Ei)
+            Ek_path.append(Ei_path)
+        plt.plot(Ek[-1][0])
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -129,7 +153,6 @@ if __name__ == "__main__":
 
     data = np.array(data)
     rotation_data = np.array(rotation_data)
-
     # baseline model
     if baseline == True:
         dData_dt = dx_dt(data)
@@ -145,8 +168,8 @@ if __name__ == "__main__":
         plt.plot(peaks, data[peaks, 0], "o")
         plt.show()
     if graph_simplification == True:
-        short_data = data[0:100]
-        graph_simplification_original(short_data[:, 0], np.arange(0, short_data.shape[0]))
+        short_data = data[0:40]
+        graph_simplification_original(short_data[:, 0], np.arange(0, short_data.shape[0]), k=10)
 
 
 
