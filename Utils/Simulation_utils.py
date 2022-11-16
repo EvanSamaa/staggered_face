@@ -4,7 +4,8 @@ from matplotlib import pyplot as plt
 def velocity_profile(t0: float, tf: float, t: float):
     v = 30 / np.power(tf - t0, 5) * ((t - t0) ** 2) * ((t - tf) ** 2)
     return v
-
+def integrate(x_t0, ):
+    return
 if __name__ == "__main__":
     y = np.zeros((1000, ))
     for t in range(0, 1000):
@@ -12,3 +13,5 @@ if __name__ == "__main__":
     x = np.arange(0, 1000)
     plt.plot(x, y)
     plt.show()
+
+
