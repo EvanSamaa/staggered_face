@@ -7,6 +7,7 @@ def rotation_angles_frome_positions(arr):
     centered at the origin, where:
         azimuth: +right,-left
         elevation: +up,-down
+    here we assume that the input vectors are in world coordinates
     :param arr: array with shape (N, 3)
     :return: array with shape (N, 2)
     """
@@ -20,6 +21,19 @@ def rotation_angles_frome_positions(arr):
     out[:, 1] = np.arcsin(out[:, 1])
 
     return out[:, 0:2] * 180 / np.pi
+def directions_from_rotation_angles(arr, magnitudes):
+    """
+    converts an array of rotation angles (in degrees) to an array of positions (x, y, z)
+    :param arr: array of rotations (centered at the origins) shape of (N, 2)
+    :param magnitudes: magnitude of the direction vector, shape of (N, 1)
+    :return: array with shape of (N, 3)
+    """
+    out = np.ones((arr.shape[0], 3))
+    out[:, 0] = magnitudes * np.tan(arr[:, 0] / 180 * np.pi)
+    out[:, 1] = magnitudes * np.tan(arr[:, 1] / 180 * np.pi)
+    out[:, 2] = magnitudes * out[:, 2]
+    return out
+
 def rotation_matrix_from_vectors(vec1, vec2):
     """ Find the rotation matrix that aligns vec1 to vec2
     :param vec1: A 3d "source" vector
