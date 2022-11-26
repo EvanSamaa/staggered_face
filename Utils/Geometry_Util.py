@@ -33,7 +33,6 @@ def directions_from_rotation_angles(arr, magnitudes):
     out[:, 1] = magnitudes * np.tan(arr[:, 1] / 180 * np.pi)
     out[:, 2] = magnitudes * out[:, 2]
     return out
-
 def rotation_matrix_from_vectors(vec1, vec2):
     """ Find the rotation matrix that aligns vec1 to vec2
     :param vec1: A 3d "source" vector
