@@ -78,6 +78,17 @@ def pitch_from_signal(x, win_size=441):
     out_interp = interp1d(xs, pitch_values, fill_value="extrapolate")
     out = np.arange(0, np.ceil(x.shape[0] / win_size))
     return out_interp(out)
+def interpolate1D(arr_t, arr_x, t):
+    arr_t = np.array(arr_t)
+    if t < arr_t[0]:
+        return arr_x[0]
+    elif t >= arr_t[-1]:
+        return arr_x[-1]
+    else:
+        for i in range(0, arr_t.shape[0] - 1):
+            if arr_t[i] <= t and arr_t[i + 1] > t:
+                return arr_x[i]
+    print("Error")
 
 if __name__ == "__main__":
     file_path = "F:/MASC/JALI_neck/data/neck_rotation_values/CNN/"
