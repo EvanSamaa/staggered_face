@@ -33,9 +33,9 @@ def directions_from_rotation_angles(arr, magnitudes):
     :return: array with shape of (N, 3)
     """
     out = np.ones((arr.shape[0], 3))
-    out[:, 0] = magnitudes * np.tan(arr[:, 0] / 180 * np.pi)
-    out[:, 1] = magnitudes * np.tan(arr[:, 1] / 180 * np.pi)
-    out[:, 2] = magnitudes * out[:, 2]
+    out[:, 0] = magnitudes * np.sin(arr[:, 0] / 180 * np.pi)
+    out[:, 1] = magnitudes * np.sin(arr[:, 1] / 180 * np.pi)
+    out[:, 2] = np.sqrt(magnitudes**2 - out[:, 1]**2 - out[:, 0]**2)
     return out
 def rotation_matrix_from_vectors(vec1, vec2):
     """ Find the rotation matrix that aligns vec1 to vec2
