@@ -89,6 +89,13 @@ def interpolate1D(arr_t, arr_x, t):
             if arr_t[i] <= t and arr_t[i + 1] > t:
                 return arr_x[i]
     print("Error")
+def gen_gaussian_window(half_win_size, stdev):
+    out = np.zeros((half_win_size * 2 + 1, ))
+    M = float(half_win_size)
+    for i in range(0, int(half_win_size * 2 + 1)):
+        out[i] = float(np.exp(-0.5 * np.power((i - M)/stdev/M, 2)))
+    return out
+
 def sparse_key_smoothing(arr_t, arr_x, fps=24,
                          smoothing_win_size = 1):
     new_temp_x = arr_x.copy()
@@ -103,15 +110,20 @@ def sparse_key_smoothing(arr_t, arr_x, fps=24,
                 actual_half_window_size = np.round(smoothing_win_size / fps / segment_size)
                 actual_half_window_size = np.maximum(actual_half_window_size, 1)
                 segment_size = smoothing_win_size / actual_half_window_size / fps
-                window = np.ones((actual_half_window_size * 2 + 1))
+                # window = np.ones((int(actual_half_window_size) * 2 + 1, ))
+                window = gen_gaussian_window(int(actual_half_window_size), 0.3).tolist()
                 vals = 0
                 count = 0
-            for w in range(0, actual_half_window_size * 2 + 1):
-                w_normalized = w - actual_half_window_size
-                interpolated_val = interpolated_val(arr_t, arr_x, arr_t[t] + w_normalized * segment_size)
-                vals += window[w] * interpolated_val
-                count += window[w]
-            new_temp_x[t] = 0.8 (vals/count) + 0.2 * (new_temp_2[t])
+                for w in range(0, int(actual_half_window_size) * 2 + 1):
+                    w_normalized = w - actual_half_window_size
+                    interpolated_val = interpolate1D(arr_t, arr_x, arr_t[t] + w_normalized * segment_size)
+                    vals += window[w] * interpolated_val
+                    count += window[w]
+                new_temp_x[t] = 0.8 * (vals/count) + 0.2 * (new_temp_2[t])
+    try:
+        new_temp_x = new_temp_x.tolist()
+    except:
+        pass
     return new_temp_x
 if __name__ == "__main__":
     file_path = "F:/MASC/JALI_neck/data/neck_rotation_values/CNN/"
@@ -120,4 +132,3 @@ if __name__ == "__main__":
     intensity = intensity_from_signal(audio)
     pitch = pitch_from_signal(audio)
     print(intensity.shape, pitch.shape)
-
