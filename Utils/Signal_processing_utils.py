@@ -89,6 +89,30 @@ def interpolate1D(arr_t, arr_x, t):
             if arr_t[i] <= t and arr_t[i + 1] > t:
                 return arr_x[i]
     print("Error")
+def sparse_key_smoothing(arr_t, arr_x, fps=24,
+                         smoothing_win_size = 1):
+    new_temp_x = arr_x.copy()
+    new_temp_2 = arr_x.copy()
+    if len(new_temp_2) > 2:
+        for t in range(1, len(new_temp_2)-1):
+            time_to_next = arr_t[t+1] - arr_t[t]
+            time_to_prev = arr_t[t] - arr_t[t-1]
+            t_nearest = np.minimum(time_to_next, time_to_prev)
+            if (t_nearest < smoothing_win_size/fps):
+                segment_size = np.maximum(t_nearest, 0.2 / fps)
+                actual_half_window_size = np.round(smoothing_win_size / fps / segment_size)
+                actual_half_window_size = np.maximum(actual_half_window_size, 1)
+                segment_size = smoothing_win_size / actual_half_window_size / fps
+                window = np.ones((actual_half_window_size * 2 + 1))
+                vals = 0
+                count = 0
+            for w in range(0, actual_half_window_size * 2 + 1):
+                w_normalized = w - actual_half_window_size
+                interpolated_val = interpolated_val(arr_t, arr_x, arr_t[t] + w_normalized * segment_size)
+                vals += window[w] * interpolated_val
+                count += window[w]
+            new_temp_x[t] = 0.8 (vals/count) + 0.2 * (new_temp_2[t])
+    return new_temp_x
 if __name__ == "__main__":
     file_path = "F:/MASC/JALI_neck/data/neck_rotation_values/CNN/"
     file_name = "cnn_borderOneGuy.wav"
