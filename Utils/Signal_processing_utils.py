@@ -89,7 +89,6 @@ def interpolate1D(arr_t, arr_x, t):
             if arr_t[i] <= t and arr_t[i + 1] > t:
                 return arr_x[i]
     print("Error")
-
 if __name__ == "__main__":
     file_path = "F:/MASC/JALI_neck/data/neck_rotation_values/CNN/"
     file_name = "cnn_borderOneGuy.wav"
