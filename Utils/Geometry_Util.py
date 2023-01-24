@@ -1,5 +1,5 @@
 import numpy as np
-
+from scipy.spatial.transform import Rotation 
 
 def rotation_angles_frome_positions(arr):
     """
@@ -50,6 +50,16 @@ def rotation_matrix_from_vectors(vec1, vec2):
     kmat = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
     rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * ((1 - c) / (s ** 2))
     return rotation_matrix
+
+
+
+def rotation_matrix_from_rotation_vector(vec):
+    """ Find the rotation matrix that represent the rotation vector
+    :param vec: the euler rotation vector wit angles in (x, y, z) direction in degrees
+    :return mat: A transform matrix (3x3) which applies the euler transformation.
+    """
+    R = Rotation.from_euler("xyz",vec,degrees=True)
+    return R
 def rotation_axis_angle_from_vector(vec1, vec2):
     """
     :param vec1: A 3d "source" vector
@@ -82,3 +92,17 @@ def rotation_matrix_from_axis_angle(axis, angle):
     R = np.eye(3) + np.sin(angle) * u_box + (1 - np.cos(angle)) * u_box @ u_box
     return R
 # def position_world_to_local(pt_in_local, local_space_point):
+
+def rot2eul(R):
+    beta = -np.arcsin(R[2,0])
+    alpha = np.arctan2(R[2,1]/np.cos(beta),R[2,2]/np.cos(beta))
+    gamma = np.arctan2(R[1,0]/np.cos(beta),R[0,0]/np.cos(beta))
+    return np.array((alpha, beta, gamma))
+
+def eul2rot(theta) :
+
+    R = np.array([[np.cos(theta[1])*np.cos(theta[2]),       np.sin(theta[0])*np.sin(theta[1])*np.cos(theta[2]) - np.sin(theta[2])*np.cos(theta[0]),      np.sin(theta[1])*np.cos(theta[0])*np.cos(theta[2]) + np.sin(theta[0])*np.sin(theta[2])],
+                  [np.sin(theta[2])*np.cos(theta[1]),       np.sin(theta[0])*np.sin(theta[1])*np.sin(theta[2]) + np.cos(theta[0])*np.cos(theta[2]),      np.sin(theta[1])*np.sin(theta[2])*np.cos(theta[0]) - np.sin(theta[0])*np.cos(theta[2])],
+                  [-np.sin(theta[1]),                        np.sin(theta[0])*np.cos(theta[1]),                                                           np.cos(theta[0])*np.cos(theta[1])]])
+
+    return R
