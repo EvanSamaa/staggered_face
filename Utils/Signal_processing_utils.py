@@ -125,6 +125,27 @@ def sparse_key_smoothing(arr_t, arr_x, fps=24,
     except:
         pass
     return new_temp_x
+def laplacian_smoothing(x, iteration = 1):
+    try:
+        length = out.shape[0]
+        out = np.zeros(x.shape)
+        for i in range(iteration):
+            out[0] = x[0]
+            for j in range(j, length-1):
+                out[j] = (x[j] + x[j-1] + x[j+1])/3.0
+            x = out
+        return out
+    except:
+        out = []
+        for i in range(iteration):
+            out = [x[0]]
+            for j in range(1, len(x)-1):
+                out.append((x[j] + x[j-1] + x[j+1])/3.0)
+            out.append(x[-1])
+            x = out.copy()
+        return out
+
+
 if __name__ == "__main__":
     file_path = "F:/MASC/JALI_neck/data/neck_rotation_values/CNN/"
     file_name = "cnn_borderOneGuy.wav"
