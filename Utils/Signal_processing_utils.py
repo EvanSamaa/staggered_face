@@ -125,16 +125,16 @@ def sparse_key_smoothing(arr_t, arr_x, fps=24,
     except:
         pass
     return new_temp_x
-
 def laplacian_smoothing(arr, iteration=1):
+
     try:
         shape = arr.shape
         for i in range(iteration):
             out = np.zeros(arr.shape)
             out[0] = arr[0]
             out[-1] = arr[-1]
-            for j in (1, shape[0]-1):
-                out[j] = (arr[j-1] + arr[j] + arr[j+1])/3.0
+            for j in range(1, shape[0] - 1):
+                out[j] = (arr[j - 1] + arr[j] + arr[j + 1]) / 3.0
             arr = out
         return out
     except:
