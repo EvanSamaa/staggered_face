@@ -10,7 +10,6 @@ import numpy as np
 def get_wav_from_video(file_name, video_folder_path):
     """
     Extract the audio out of the video file, and save it as a separate wav file with the same file name
-
     :param file_name: Name of the file including the file extension. Does not need to include the full path
     :param video_folder_path: full path pointint to the folder containing file_name
     :return: name of the wav file
@@ -26,6 +25,30 @@ def get_wav_from_video(file_name, video_folder_path):
             my_clip = ed.VideoFileClip(video_path)
             my_clip.audio.write_audiofile(video_path[:-3] + "wav")
     return video_path[:-3] + "wav"
+def get_wav_from_video(file_name, video_folder_path=""):
+    """
+    Extract the audio out of the video file, and save it as a separate wav file with the same file name
+    :param file_name: Name of the file including the file extension. Does not need to include the full path
+    :param video_folder_path: full path pointint to the folder containing file_name
+    :return: name of the wav file
+    """
+    if video_folder_path == "":
+        video_path = file_name
+        my_clip = ed.VideoFileClip(video_path)
+        my_clip.audio.write_audiofile(video_path[:-3] + "wav")
+        return video_path[:-3] + "wav"
+    else:
+        dir_files = os.listdir(video_folder_path)
+        if len(dir_files) == 0:
+            print("The directory is empty")
+            return []
+        for video in os.listdir(video_folder_path):
+            # print(video)
+            if video == file_name:
+                video_path = os.path.join(video_folder_path, video)
+                my_clip = ed.VideoFileClip(video_path)
+                my_clip.audio.write_audiofile(video_path[:-3] + "wav")
+        return video_path[:-3] + "wav"
 def get_frames_from_video(file_name, video_folder_path, target_fps = 30, remove=False):
     # filename can just be the name of the file,
     # the video must be in the video folder_path

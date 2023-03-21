@@ -37,7 +37,7 @@ def dx_dt(x: np.array, dt: float = 1, method=1):
             out_dx_dt[-1] = 0
             out_dx_dt[0] = 0
     return out_dx_dt
-def intensity_from_signal(x, win_size=441):
+def intensity_from_signal(x, win_size=441, unit="db"):
     """
     get the intensity of a signal, as implemented in praat
     :param x: input signal, should be a numpy array
@@ -57,10 +57,12 @@ def intensity_from_signal(x, win_size=441):
         if current_frame_intensity <= 1.0e-30:
             current_frame_intensity = 0
         else:
-        # if in the absolute value scale
-            # current_frame_intensity = np.sqrt(current_frame_intensity)
-        # in the case where logarithmic scale should be used
-            current_frame_intensity = 10*np.log10(current_frame_intensity)
+            # if in the absolute value scale
+            if unit == "pow":
+                current_frame_intensity = np.sqrt(current_frame_intensity)
+            # in the case where logarithmic scale should be used
+            elif unit == "db":
+                current_frame_intensity = 10*np.log10(current_frame_intensity)
         intensity.append(current_frame_intensity)
     return np.array(intensity)
 def pitch_from_signal(x, win_size=441):
